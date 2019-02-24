@@ -357,6 +357,7 @@ screen main_menu():
     style_prefix "main_menu"
 
     add gui.main_menu_background
+    #add "Erstwhile House.png" xalign 1.0 yalign 1.0
 
     ## This empty frame darkens the main menu.
     frame:

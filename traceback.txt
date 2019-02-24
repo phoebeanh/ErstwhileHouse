@@ -1,0 +1,40 @@
+﻿I'm sorry, but an uncaught exception occurred.
+
+After initialization, but before game start.
+  File "renpy/common/00start.rpy", line 79, in _init_language
+    renpy.change_language(language)
+  File "game/screens.rpy", line 400, in <module>
+    properties gui.text_properties("main_menu", accent=True, color="#fcfcfc")
+TypeError: text_properties() got an unexpected keyword argument 'color'
+
+-- Full Traceback ------------------------------------------------------------
+
+Full traceback:
+  File "/Applications/RenPy/renpy/bootstrap.py", line 313, in bootstrap
+    renpy.main.main()
+  File "/Applications/RenPy/renpy/main.py", line 513, in main
+    run(restart)
+  File "/Applications/RenPy/renpy/main.py", line 71, in run
+    renpy.translation.init_translation()
+  File "/Applications/RenPy/renpy/translation/__init__.py", line 547, in init_translation
+    renpy.store._init_language()  # @UndefinedVariable
+  File "renpy/common/00start.rpy", line 79, in _init_language
+    renpy.change_language(language)
+  File "/Applications/RenPy/renpy/translation/__init__.py", line 625, in change_language
+    new_change_language(tl, language)
+  File "/Applications/RenPy/renpy/translation/__init__.py", line 593, in new_change_language
+    i.apply()
+  File "/Applications/RenPy/renpy/ast.py", line 2424, in apply
+    value = renpy.python.py_eval(expr)
+  File "/Applications/RenPy/renpy/python.py", line 1944, in py_eval
+    return py_eval_bytecode(code, globals, locals)
+  File "/Applications/RenPy/renpy/python.py", line 1937, in py_eval_bytecode
+    return eval(bytecode, globals, locals)
+  File "game/screens.rpy", line 400, in <module>
+    properties gui.text_properties("main_menu", accent=True, color="#fcfcfc")
+TypeError: text_properties() got an unexpected keyword argument 'color'
+
+Darwin-18.2.0-x86_64-i386-64bit
+Ren'Py 7.1.3.1092
+Erstwhile House 1.0
+Thu Feb 21 00:17:48 2019

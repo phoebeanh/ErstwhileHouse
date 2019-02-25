@@ -26,10 +26,8 @@ label start:
 
     e "Congratulations!"
     e "Based on your application, you have been selected to be a summer intern at the Erstwhile House!"
-    e "The experience you will gain from an internship  experience is a valuable addition to your academic course work."
-    e "The materials provided will be helpful to you as you begin your internship. Please read this packet in its entirety to ensure preparedness for you arrival."
-    e "We look forward to working with you!"
-
+    e "Throughout this experience you will be given both menial and substantially significant tasks that could effect the outcome of your internship"
+    e "Choose wisely as each decision could have a devastating impact on your future, and don't forget to have fun!"
     # This ends the game.
 
     return

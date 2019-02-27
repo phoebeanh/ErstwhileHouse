@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/screens.rpy", line 400: style property gui is not known.
-    gui.accent_color = "#fcfcfc"
-       ^
+File "game/script.rpy", line 92: end of line expected.
+    jump to helpTrevor
+            ^
 
 Ren'Py Version: Ren'Py 7.1.3.1092
-Thu Feb 21 00:11:53 2019
+Wed Feb 27 16:34:46 2019

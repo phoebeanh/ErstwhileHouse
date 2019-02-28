@@ -18,7 +18,7 @@ label start:
    # dialogue
     "Congratulations!"
     "Based on your application, you have been selected to be a summer intern at the Erstwhile House!"
-    "Throughout this experience you will be given both menial and substantially significant tasks that could effect the outcome of your internship"
+    "Throughout this experience you will be given both menial and substantially significant tasks that could effect the outcome of your internship."
     "Choose wisely, as each decision could have a devastating impact on your future."
     "But more importantly, don't forget to have fun!"
     
@@ -35,20 +35,16 @@ label start:
 
     jade "Hey, who are you?"
 
-    menu:
-         
+    menu:   
       "What should I say?"
       
       "I’m the new intern!":
-
          jump friendlyintro
       
       "What’s it to you?":
-
          jump rudeintro
             
       "Well, who are you?":
-
          jump whoareyou
 
 label friendlyintro:
@@ -81,7 +77,7 @@ label helpJadeNeg:
    jade "Well, you sure are rude. Listen, it shouldn’t take very long, please? I’ll owe you one."
    menu:
       "Fine":
-         jump helpJadePos
+         jump helpJadePos #TODO: maybe make this not pos?
 
       "I'll hold you to that":
          jump illHoldYouToThat
@@ -94,10 +90,11 @@ label illHoldYouToThat:
 label whoseTrev:
    show trevor flustered
    jade "Oh! I’m sorry, I guess you haven’t had a chance to go through introductions yet."
+   show trevor pleasant
    jade "Trevor is another intern here at the Erstwhile House. He can be a little... arrogant... but don’t let it get to you."
 
    menu: 
-      "Well what do you say? Can you help me?"
+      jade "Well what do you say? Can you help me?"
 
       "Sure, I can do that.":
          jump helpJadePos
@@ -109,8 +106,8 @@ label rudeintro:
    show trevor annoyed
 
    jade "Ah, you must be the new intern. Looks like they should’ve picked someone else."
-   jade "Trevor has some work for you. I think he's in one of the offices down the hall on the left."
-   jump end
+   jade "One of my colleagues, Trevor, has some work for you. I think he's in one of the offices down the hall on the left. Don't keep him waiting."
+   jump helpTrevor
 
 label whoareyou:
    show trevor flustered

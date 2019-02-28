@@ -31,7 +31,7 @@ label start:
 
     scene bg erstwhilefoyer
     with fade
-    show trevor annoyed
+    show jade default
 
     jade "Hey, who are you?"
 
@@ -48,9 +48,10 @@ label start:
          jump whoareyou
 
 label friendlyintro:
-   show trevor pleasant
-
+   show jade pleasant
    jade "Oh, Morgan mentioned that you were arriving today. Nice to meet you! My name is Jade."
+
+   show jade default
    jade "I wish we had time to talk but I have to run to a cabinet meeting. Actually, now that you’re here, do you mind doing me a favor?"
    jade "Trev mentioned that he needed some help in his father’s office but I can’t help and be in time for this meeting. Would you mind going in my stead?"
    
@@ -67,54 +68,52 @@ label friendlyintro:
          jump whoseTrev
 
 label helpJadePos:
-   show trevor pleasant
+   show jade pleasant
 
    jade "Okay, great! Thanks so much, you’re a big help!"
    jump helpTrevor
 
 label helpJadeNeg:
-   show trevor annoyed
+   show jade annoyed
    jade "Well, you sure are rude. Listen, it shouldn’t take very long, please? I’ll owe you one."
    menu:
-      "Fine":
+      "Fine.":
          jump helpJadePos #TODO: maybe make this not pos?
 
-      "I'll hold you to that":
+      "I'll hold you to that.":
          jump illHoldYouToThat
 
 label illHoldYouToThat:
-   show trevor default
+   show jade annoyed
    jade "... Sure, okay. Thanks for doing this."
    jump helpTrevor
 
 label whoseTrev:
-   show trevor flustered
+   show jade flustered
    jade "Oh! I’m sorry, I guess you haven’t had a chance to go through introductions yet."
-   show trevor pleasant
+   show jade pleasant
    jade "Trevor is another intern here at the Erstwhile House. He can be a little... arrogant... but don’t let it get to you."
 
    menu: 
       jade "Well what do you say? Can you help me?"
 
-      "Sure, I can do that.":
+      "I can do that.":
          jump helpJadePos
 
       "You sure are needy.":
          jump helpJadeNeg
 
 label rudeintro:
-   show trevor annoyed
+   show jade annoyed
 
    jade "Ah, you must be the new intern. Looks like they should’ve picked someone else."
    jade "One of my colleagues, Trevor, has some work for you. I think he's in one of the offices down the hall on the left. Don't keep him waiting."
    jump helpTrevor
 
 label whoareyou:
-   show trevor flustered
-
+   show jade flustered
    jade "Ah, where are my manners? My apologies."
-   
-   show trevor pleasant
+   show jade pleasant
    jade "I’m Jade, a fellow intern. It's nice to meet you. You must be the new intern I’ve been hearing about."
    jade "While you’re here, do you mind helping me out? I have to run to a meeting, and my intern colleague, Trevor, mentioned needing some help in one of the offices down the hall. Do you mind helping him for me?"
    menu: 
@@ -131,9 +130,99 @@ label helpTrevor:
    scene bg vernersoffice
    with fade
 
-   "TBD"
+   show trevor default
+   trev "I don’t recognize you. Are you the new coffee runner?"
+   menu:
+      "Excuse me?":
+         jump coffeeRunnerNeutral
+      "Pardon me, are you Trevor?":
+         jump coffeeRunnerNeg
+      "Fuck yeah I am.":
+         jump coffeeRunnerPos
+      
+label coffeeRunnerNeutral:
+   trev "I’ll take that as a yes. Listen, my dad needs some coffee, and I have better things to do. Can you go get coffee?"
+   menu:
+      "Sure!":
+         jump coffeeRunPos
+      "I’m not going to do your work for you":
+         jump coffeeRunNeg
+      "Whose your dad?":
+         jump whoseYourDaddy
+
+label coffeeRunPos:
+   show trevor pleasant
+   trev "Great. Thanks, I gotta go to the golf course now. See ya!"
+   jump backToJade
+
+label coffeeRunNeg:
+   show trevor annoyed
+   trev "Well then. You’re no help to me. Go bother someone else."
+   jump backToJade
+
+label whoseYourDaddy:
+   trev "Ah. So your {i}new{/i} new."
+   trev "My dad is Verner Matthias. The most senior cabinet member in the Erstwhile House."
+   trev "Don’t mess with him. He bites."
+   menu:
+      trev "Well?"
+      "Sure!":
+         jump coffeeRunPos
+      "I’m not going to do your work for you!":
+         jump coffeeRunNeg
+
+label coffeeRunnerNeg:
+   show trevor annoyed
+   trev "Ugh. Yes. Why? Do you need something? If not, go get my dad some coffee. He wants me to do it, but I've got better things to do."
+   menu:
+      "I guess I can do that.":
+         jump coffeeRunPos
+      "Wow, you're an ass.":
+         jump youreAnAss
+      "Whose your dad?":
+         jump whoseYourDaddy
+
+label youreAnAss:
+   show trevor pleasant
+   trev "Thanks. Now go do your job, coffee runner."
+   jump backToJade
+
+label coffeeRunnerPos:
+   show trevor pleasant
+   trev "Great. I need someone to go get my dad coffee. He wants me to do it, but I've got better things to do."
+   menu:
+      "I guess I can do that.":
+         jump coffeeRunPos
+      "Wow, you're an ass.":
+         jump youreAnAss
+      "Whose your dad?":
+         jump whoseYourDaddy
+
+label backToJade:
+   scene bg erstwhilefoyer
+   with fade
+   show jade default
+   jade "You’re back! Thanks so much for doing that for me, I would’ve never made that meeting in time otherwise. How was Trevor?"
+   menu:
+      "He's... nice.":
+         jump blatantLies
+      "He's kind of an asshole.":
+         jump assholeBoy
+
+label blatantLies:
+   show jade pleasant
+   jade "Haha, you don’t have to sugarcoat it! Trev is notoriously difficult to get along with."
+   jump end
+
+label assholeBoy:
+   jade "Yeah, he can be a little hard to handle sometimes."
    jump end
 
 label end:
-    # This ends the game.
-    return
+   show jade default
+   jade "Well, I’m sure Morgan needs to see you now. She’s the lady in charge of the intern program. Why don’t I take you to her office?"
+   scene black
+   with fade
+   "End demo"
+   # This ends the game.
+   return

@@ -64,8 +64,8 @@ label friendlyintro:
       "You sure are needy.":
          jump helpJadeNeg
 
-      "Whose Trevor?":
-         jump whoseTrev
+      "Who's Trevor?":
+         jump whosTrev
 
 label helpJadePos:
    show jade pleasant
@@ -88,7 +88,7 @@ label illHoldYouToThat:
    jade "... Sure, okay. Thanks for doing this."
    jump helpTrevor
 
-label whoseTrev:
+label whosTrev:
    show jade flustered
    jade "Oh! I’m sorry, I guess you haven’t had a chance to go through introductions yet."
    show jade pleasant
@@ -147,8 +147,8 @@ label coffeeRunnerNeutral:
          jump coffeeRunPos
       "I’m not going to do your work for you":
          jump coffeeRunNeg
-      "Whose your dad?":
-         jump whoseYourDaddy
+      "Who's your dad?":
+         jump whosYourDaddy
 
 label coffeeRunPos:
    show trevor pleasant
@@ -160,7 +160,7 @@ label coffeeRunNeg:
    trev "Well then. You’re no help to me. Go bother someone else."
    jump backToJade
 
-label whoseYourDaddy:
+label whosYourDaddy:
    trev "Ah. So your {i}new{/i} new."
    trev "My dad is Verner Matthias. The most senior cabinet member in the Erstwhile House."
    trev "Don’t mess with him. He bites."
@@ -179,8 +179,8 @@ label coffeeRunnerNeg:
          jump coffeeRunPos
       "Wow, you're an ass.":
          jump youreAnAss
-      "Whose your dad?":
-         jump whoseYourDaddy
+      "Who's your dad?":
+         jump whosYourDaddy
 
 label youreAnAss:
    show trevor pleasant
@@ -195,8 +195,8 @@ label coffeeRunnerPos:
          jump coffeeRunPos
       "Wow, you're an ass.":
          jump youreAnAss
-      "Whose your dad?":
-         jump whoseYourDaddy
+      "Who's your dad?":
+         jump whosYourDaddy
 
 label backToJade:
    scene bg erstwhilefoyer

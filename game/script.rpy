@@ -18,7 +18,7 @@ label start:
    # dialogue
     "Congratulations!"
     "Based on your application, you have been selected to be a summer intern at the Erstwhile House!"
-    "Throughout this experience you will be given both menial and substantially significant tasks that could effect the outcome of your internship."
+    "Throughout this experience, you will be given both menial and substantially significant tasks that could affect the outcome of your internship."
     "Choose wisely, as each decision could have a devastating impact on your future."
     "But more importantly, don't forget to have fun!"
     
@@ -52,8 +52,8 @@ label friendlyintro:
    jade "Oh, Morgan mentioned that you were arriving today. Nice to meet you! My name is Jade."
 
    show jade default
-   jade "I wish we had time to talk but I have to run to a cabinet meeting. Actually, now that you’re here, do you mind doing me a favor?"
-   jade "Trev mentioned that he needed some help in his father’s office but I can’t help and be in time for this meeting. Would you mind going in my stead?"
+   jade "I wish we had time to talk, but I have to run to a cabinet meeting. Actually, now that you’re here, do you mind doing me a favor?"
+   jade "Trev mentioned that he needed some help in his father’s office, but I can’t help and be on time for this meeting. Would you mind going in my stead?"
    
    menu:
       "What should I say?"
@@ -157,12 +157,12 @@ label coffeeRunPos:
 
 label coffeeRunNeg:
    show trevor annoyed
-   trev "Well then. You’re no help to me. Go bother someone else."
+   trev "Well, then You’re no help to me. Go bother someone else."
    jump backToJade
 
 label whosYourDaddy:
-   trev "Ah. So your {i}new{/i} new."
-   trev "My dad is Verner Matthias. The most senior cabinet member in the Erstwhile House."
+   trev "Ah, So you're {i}new{/i} new."
+   trev "My dad is Verner Matthias, the most senior cabinet member in the Erstwhile House."
    trev "Don’t mess with him. He bites."
    menu:
       trev "Well?"

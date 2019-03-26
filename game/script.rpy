@@ -5,6 +5,11 @@
 
 define trev = Character("Trev")
 define jade = Character("Jade")
+define morgan = Character("Morgan Odell")
+define blair = Character("Blair Bailey")
+define freda = Character("Freda Robert")
+define truman = Character("Truman Pierce")
+define verner = Character("Verner Matthias")
 define me = Character("Me")
 
 
@@ -221,8 +226,12 @@ label assholeBoy:
 label end:
    show jade default
    jade "Well, I’m sure Morgan needs to see you now. She’s the lady in charge of the intern program. Why don’t I take you to her office?"
-   scene black
-   with fade
-   "End demo"
+   jump morganEndDayOne
+
+label morganEndDayOne:
+   scene bg 
+
+
+
    # This ends the game.
    return

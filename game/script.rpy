@@ -229,8 +229,8 @@ label end:
    jump morganEndDayOne
 
 label morganEndDayOne:
-   scene bg 
-
+   scene bg morganoffice
+   with fade
 
 
    # This ends the game.

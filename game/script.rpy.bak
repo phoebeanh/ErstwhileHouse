@@ -33,9 +33,6 @@ define rejectedFreda = False
 define rejectedTruman = False
 define rejectedVerner = False
 
-#Freda
-define fredaGlasses = False
-
 #Freda/Truman Romance Flags
 define trumanFredaRomance = 0
 define trumanNote = False
@@ -485,20 +482,12 @@ label freda2_3Neutral:
          jump freda2_4Pos
       "Sure." if visitedBlair == False:
          jump freda2_4Pos
-      "Actually, I have them right here." if visitedBlair == True:
+      "Actually, I have them right here." if visitedBlair == False:
          $ fredaScore += 5
-         freda "You do?"
          jump freda2_completeTask
 
-label freda2_returnGlasses:
-   scene bg fredaoffice
-   with fade
-   show freda default
-   freda "Oh thank goodness you found them! I don't think my eyes could have taken much more strain."
-   jump freda2_completeTask
-
 label freda2_completeTask:
-   freda "Well thank you so much for grabbing those for me, [povname]!"
+   freda "You do? Well thank you so much for grabbing those for me, [povname]!"
    freda "You've been a big help. I'll let Morgan know about your progress."
    hide freda default
    $ visitedFreda = True
@@ -506,20 +495,21 @@ label freda2_completeTask:
 
 label freda2_4Pos:
    freda "Thank you so much, [povname]!"
+   hide freda default
    $ visitedFreda = True
    jump blairDayTwo
 
 label day2Toggle:
    menu:
       me "Ok, where should I go next?" 
-      "Help Freda" if fredaGlasses == False or visitedFreda == False:
+      "Help Freda" if visitedFreda == False:
          jump fredaDayTwo
       "Help Truman" if visitedTruman == False:
          jump trumanDayTwo
       "Help Blair" if visitedBlair == False:
          jump blairDayTwo
       "Call it a day":
-         jump morgan2
+         jump playingHooky
 
 #Day 2 Truman
 label trumanDayTwo:
@@ -692,7 +682,7 @@ label blair2_morganNeu:
 
 label blair2_morganNeg:
    morgan "Excuse me? I’ll be making a note of this."
-   morgan "You better continue doing whatever you were in the middle of doing before I fire you on the spot."
+   morgan "You better continue doing whatever you were in the middle of doing before I fire you on the spot. "
    morgan "Shoo!"
    jump blair2_coffee
 
@@ -726,14 +716,7 @@ label blair2_giveCoffee:
 label blair2_endend:
    blair "Thank you for the coffee. You may leave me now."
    $ visitedBlair = True
-   if fredaGlasses == False:
-      blair "Oh, by the way, Freda left her glasses in here from our last staff meeting. Please return them to her."
-      me "I got a pair of mottled glasses. They seem a bit crooked..."
-      $ fredaGlasses = True
-      me "I better return these to Freda now."
-      jump freda2_returnGlasses
-   hide blair default
-   jump day2Toggle
+   jump morgan2
 
 label morgan2: 
    scene bg morganoffice
@@ -970,7 +953,7 @@ label dayFiveToggle:
    menu:
       me "Ok, where should I go next?" 
       "Help Verner" if visitedVerner == False:
-         jump vernerDayFive
+         jump vernerDayFour
       "Call it a day":
          jump playingHooky
    
@@ -1141,19 +1124,17 @@ label endDay:
          $ morganScore -= 20
       elif visitedTruman == False or visitedFreda == False or rejectedFreda == True or rejectedTruman == True:
          $ morganScore -= 10
-      call resetFlags from _call_resetFlags
+      call resetFlags
       jump startDayThree
    if day == 4:
       if visitedVerner == False:
          $ morganScore -= 10
-      call resetFlags from _call_resetFlags_1
+      call resetFlags
       jump startDayFour
    if day == 5:
       if visitedVerner == False:
          $ morganScore -= 10
-      call resetFlags from _call_resetFlags_2
-      jump startDayFive
-   if day == 6: 
+      call resetFlags
       jump end
 
 label resetFlags:

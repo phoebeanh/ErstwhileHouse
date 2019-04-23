@@ -1,6 +1,10 @@
 # ErstwhileHouse
 log.txt
 errors.txt
+traceback.txt
+
 game/saves/*
 game/cache/*
 game/*.rpyc
+*.rpyc
+*.rpyb

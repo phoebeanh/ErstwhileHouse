@@ -43,10 +43,6 @@ define trumanFredaRomance = 0
 define trumanNote = False
 define coffeeOrder = ""
 
-#Music
-define audio.default = "music/background.wav"
-play music default
-
 label start:
     scene black
     with fade

@@ -276,7 +276,7 @@ label morganEndDayOne:
    morgan "Alright, let’s get some paperwork out of the way."
 
    python:
-    povname = renpy.input("Your name is...")
+    povname = renpy.input("Your name is...", length=15, exclude="1234567890!@#$%^&*()<>")
     povname = povname.strip()
 
     if not povname:

@@ -351,7 +351,7 @@ label startDayTwo:
    morgan "In addition, Verner Matthias said he would like to speak to each of the interns on their first day. He doesn't usually show this kind of attention to interns, so I would take advantage of his expertise."
    morgan "Good luck."
    hide morgan default
-   me "Ok, it looks like today I have to check on Truman, Verner and Freda."
+   me "Ok, it looks like today I have to check on {b}Truman{/b}, {b}Verner{/b} and {b}Freda{/b}."
    jump day2Toggle
 
 #DAY END EARLY
@@ -511,20 +511,21 @@ label freda2_silly:
    freda "Oh! I didn’t even tell you what I’m looking for! My glasses, I can’t find my glasses!"
    menu:
       freda "Oh wait! That’s right! I think they’re in Blair’s office, can you go get them for me? "
-      "I have some things to do around here...":
-         $ fredaScore -= 1
-         jump freda2_reject
       "Will do":
          $ fredaScore += 1
          jump freda2_4Pos
       "I guess...":
          jump freda2_4Pos
+      "I have some things to do around here...":
+         $ fredaScore -= 1
+         $ visitedFreda = True
+         jump freda2_reject
 
 label freda2_reject:
+   $ visitedFreda = True
    freda "Oh...Uhm. I guess I’ll try looking for them myself."
    freda "Go on then."
    $ rejectedFreda = True
-   $ visitedFreda = True
    if visitedBlair == False:
       freda "Blair Bailey was looking for an assistant by the way..."
       jump blairDayTwo
@@ -571,6 +572,10 @@ label freda2_3Neutral:
          $ fredaScore += 5
          freda "You do?"
          jump freda2_completeTask
+      "I have better things to do...":
+         $ visitedBlair = True
+         $ visitedFreda = True
+         jump freda2_reject
 
 label freda2_returnGlasses:
    scene bg fredaoffice
@@ -597,7 +602,7 @@ label freda2_4Pos:
 label day2Toggle:
    menu:
       me "Ok, where should I go next?" 
-      "Help Freda" if fredaGlasses == False or visitedFreda == False:
+      "Help Freda" if visitedFreda == False:
          jump fredaDayTwo
       "Help Truman" if visitedTruman == False:
          jump trumanDayTwo
@@ -710,8 +715,12 @@ label truman2_freda1:
 
 label truman2_rejectFredaQuest:
    truman "Oh...ok"
-   truman "Well...go see Blair once you finish up."
-   jump trumanToBlair
+   if visitedBlair == False:
+      truman "Well...go see Blair once you finish up."
+      jump trumanToBlair
+   else:
+      truman "Well... come see me when you're done with your tasks."
+      jump truman2_afterStack
 
 label truman2_acceptFredaQuest:
    truman "Thank you so much, [povname]."
@@ -944,7 +953,7 @@ label blair2_giveCoffee:
 label blair2_endend:
    blair "You may leave me now."
    $ visitedBlair = True
-   if fredaGlasses == False:
+   if (fredaGlasses == False and rejectedFreda == False):
       blair "Oh, by the way, Freda left her glasses in here from our last staff meeting. Please get them to her at some point."
       me "{i}They seem a bit crooked...{/i}"
       $ fredaGlasses = True
@@ -996,15 +1005,12 @@ label startDayThree:
       morgan "Good morning, [povname]."
       morgan "I got some alarming reports from yesterday that you did not complete your assignments. This is highly disappointing. We all expected better of you."
       morgan "Do not make the same mistake today."
-      morgan "Here are you tasks..."
-      morgan "It looks like Verner Matthias needs an extra hand. Go by his office today and see what he needs."
-      morgan "Good luck."
    else:
       morgan "Good morning, [povname]. I expect you are well."
-      morgan "Here are you tasks for the day..."
-      morgan "It looks like Verner Matthias needs an extra hand. Go by his office today and see what he needs."
-      morgan "Blair Bailey also needs a hand revising some local jurisdiction paperwork."
-      morgan "Good luck."
+   morgan "Here are you tasks for the day..."
+   morgan "It looks like Verner Matthias needs an extra hand. Go by his office today and see what he needs."
+   morgan "Blair Bailey also needs a hand revising some local jurisdiction paperwork."
+   morgan "Good luck."
    hide morgan default
    jump day3Toggle
 
@@ -1013,15 +1019,14 @@ label blairDayThree:
    scene bg blairoffice
    with fade
    show blair default
-   blair "Come in [povname], good to see you again. Never sure if our interns will come back."
-   blair "You know I’ve been working here long enough to know you can’t trust half the people in this building. Especially the prime minister himself."
+   blair "Come in [povname]."
+   if rejectedFreda == False:
+      blair "Good to see you again. Never sure if our interns will come back."
+   blair "You know, I've been thinking to myself this morning... I’ve been working here long enough to know you can’t trust half the people in this building. Especially the prime minister himself."
    blair "...Don’t tell him I said that."
    blair "I do hope that I can trust you. I’ve been working with interns for awhile now and I want you to know I’m going to treat you like any other employee."
    menu:
       blair "If you do better than Verner's waste of skin son, you'll be fine."
-      "Even Verner doesn't seem to be the biggest fan of Trevor":
-         blair "Well I can’t be sure you’re any better until you prove yourself to me."
-         jump blair3_task
       "Do you mind me asking why you don’t like Petrone?":
          $ blairScore += 5
          blair "Well, you didn't hear this from me, but I think Petrone has lost sight of what's important. For example, running this country."
@@ -1030,9 +1035,12 @@ label blairDayThree:
          blair "Exactly. A good leader should be interested in who exactly is coming in and out of the most powerful building in the country. Especially if they're to be the next generation of leaders."
          blair "I think we need to reconsider just how dedicated he is to the good of the country."
          jump blair3_petrone
-      "It's nice of you to treat me like an equal":
+      "It's nice of you to treat me like an equal!":
          $ blairScore += 1
          blair "Well don’t get too comfortable. All that means is I’m expecting you to complete the same tasks and not complain about it."
+         jump blair3_task
+      "Even Verner doesn't seem to be the biggest fan of Trevor...":
+         blair "Well I can’t be sure you’re any better until you prove yourself to me."
          jump blair3_task
 
 label blair3_task:
@@ -1140,7 +1148,7 @@ label verner3_end:
 #Day 3 TOGGLE
 label day3Toggle:
    menu:
-      me "Ok, it looks like today I have to check on Verner and Freda."     
+      me "Ok, it looks like today I have to check on {b}Verner{/b} and {b}Blair{/b}."     
       "Help Verner" if visitedVerner == False:
          jump vernerDayThree
       "Help Blair" if visitedBlair == False:
@@ -1232,6 +1240,8 @@ label freda4_rejectGift:
    jump endDay
 
 label truman4:
+   scene bg trumanoffice
+   show truman default
    truman "Hello [povname]. Is there something you need help with?"
    menu:
       truman "I don't recall asking your assistance today.."
@@ -1419,7 +1429,7 @@ label verner4_end_noTrevor:
    show verner default
    verner "Finished? Thank you. You are free to go."
    $ visitedVerner = True
-   jump endDay
+   jump dayFourToggle
 
 #DAY FIVE START
 label startDayFive: 
@@ -1452,8 +1462,6 @@ label dayFiveToggle:
          jump fredaDayFive
       "Help Blair." if visitedBlair == False:
          jump blairDayFive
-      "Call it a day.":
-         jump playingHooky
 
 define trevorTalk = False
 
@@ -1584,7 +1592,7 @@ label freda5_silly:
       freda "Trevor...he’s a grouch, why would he ever send me flowers? Who else is here that has a name that starts with T…"
       "Truman?":
          jump freda5_truman
-      "I give up":
+      "I give up.":
          jump freda5_exasperated
 
 label freda5_exasperated:
@@ -1622,9 +1630,9 @@ label truman5_yes:
       "Why don’t you go talk to her yourself?":
          $ trumanScore += 1
          jump truman5_yesPos
-      "I guess I do":
+      "I guess I do..":
          jump truman5_yesNeu
-      "Seems a little dramatic":
+      "Seems a little dramatic.":
          $ trumanScore -= 1
          jump truman5_yesNeg
 
@@ -1691,13 +1699,15 @@ label truman5_giveNote:
    truman "Let me see that."
    truman "..."
    truman "......"
-   truman "Oh... I had no idea she felt this same way."
+   truman "Oh... I had no idea she felt the same way."
    truman "You know what? I'm done hiding behind others to share my emotions. I'm going to tell her myself."
    truman "Please excuse me, [povname]."
+   truman "You are free to go. Or come along, it does not matter to me."
+   truman "Love awaits!"
    jump truman5_romanceFinal
  
 label truman5_romanceFinal:
-   scene bg fredaoffice
+   scene bg fredaoffice with fade
    show freda default
    show truman default
    truman "Oh! Freda...Freda, I have something to tell you."
@@ -1962,7 +1972,9 @@ label romanceEnding:
    "The two lovebirds soon retire after their elopement. Based on their glowing reviews of you, Morgan Odell assigns you to take over both of their positions can be filled."
    "You do such a good job of it, you become the new Secretary of Treasury, officially taking over Freda Robert's role."
    "You end up having a very fruitful career in the Erstwhile House."
-   "CONGRATULATIONS"
+   "Sometimes, you get a few flowers on your desk, labeled F & T."
+   "You smile to yourself whenever you see them."
+   "The end."
    jump end
 
 # You finish job

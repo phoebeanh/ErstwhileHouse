@@ -8,6 +8,8 @@ define blair = Character("Blair Bailey")
 define freda = Character("Freda Robert")
 define truman = Character("Truman Pierce")
 define verner = Character("Verner Matthias")
+define unknown = Character("???")
+define petrone = Character("Prime Minister Petrone")
 define me = Character("[povname]")
 
 define day = 1
@@ -40,6 +42,10 @@ define fredaGlasses = False
 define trumanFredaRomance = 0
 define trumanNote = False
 define coffeeOrder = ""
+
+#Music
+define audio.default = "music/background.wav"
+play music default
 
 label start:
     scene black
@@ -418,7 +424,7 @@ label freda2_giveLetter:
       hide freda noglasses
       me "Hmmm... that was strange..."
       $ visitedFreda = True
-      jump day2Toggle
+      jump blairDayTwo
    if visitedBlair == True:
       jump freda2_visitedBlair
 
@@ -529,7 +535,7 @@ label freda2_reject:
 label freda2_1Pos:
    freda "Oh well, let me think." 
    freda "..."
-   freda "I had them on this morning when I went and got my first coffee..."
+   freda "I had them this morning when I went and got my first coffee..."
    freda "And then my second..."
    freda "...."
    freda "... And then my third....."
@@ -553,6 +559,7 @@ label freda2_2Funny:
 
 label freda2_3Neutral:
    $ visitedFreda = True
+   freda "Oh!"
    menu:
       freda "I think I left my glasses in Blair’s office! Do you mind going to grab them?" 
       "Of course!" if visitedBlair == False:
@@ -647,7 +654,7 @@ label truman2_acceptTask:
 label truman2_afterStack:
    scene black
    with fade 
-   scene trumanoffice
+   scene bg trumanoffice
    show truman default
    menu:
       truman "How'd you do?"
@@ -658,14 +665,15 @@ label truman2_afterStack:
          jump truman2_afterStackNeg
 
 label truman2_afterStackNeg:
-   freda "It wasn’t that bad. C’mon, you’re just exaggerating."
-   freda "Well, anyways, I don’t need any more help for today. Thanks for stopping by."
-   $ visitedFreda = True
+   truman "It wasn’t that bad. C’mon, you’re just exaggerating."
+   truman "Well, anyways, I don’t need any more help for today. Thanks for stopping by."
+   $ visitedTruman = True
    jump day2Toggle
 
 label truman2_afterStackPos:
-   freda "Good! Good! Thank you so much."
-   freda "Well, that's all for today from me. Thanks for stopping by, [povname]."
+   truman "Good! Good! Thank you so much."
+   truman "Well, that's all for today from me. Thanks for stopping by, [povname]."
+   $ visitedTruman = True
    jump day2Toggle
 
 label truman2_freda:
@@ -818,12 +826,13 @@ label blairDayTwo:
    menu:
       blair "Can you go grab some for me?"
       "Ok! Right away.":
-         $ blairScore += 1
+         $ blairScore += 2
          jump blair2_accept
       "What? No. Why does everyone think I’m the errand runner around here.":
          $ blairScore -= 1
          jump blair2_reject
       "Uh, I guess...":
+         $ blairScore += 1
          jump blair2_accept
 
 label blair2_accept:
@@ -903,7 +912,7 @@ label blair2_end:
          $ blairScore -= 1
          jump blair2_sidetracked
       "Here's your coffee.":
-         $ blairScore += 1
+         $ blairScore += 2
          jump blair2_giveCoffee
       
 label blair2_sidetracked:
@@ -995,7 +1004,8 @@ label blairDayThree:
    show blair default
    blair "Come in [povname], good to see you again. Never sure if our interns will come back."
    blair "You know I’ve been working here long enough to know you can’t trust half the people in this building. Especially the prime minister himself."
-   blair "Don’t tell him I said that. I do hope that I can trust you. I’ve been working with interns for awhile now and I want you to know I’m going to treat you like any other employee."
+   blair "...Don’t tell him I said that."
+   blair "I do hope that I can trust you. I’ve been working with interns for awhile now and I want you to know I’m going to treat you like any other employee."
    menu:
       blair "If you do better than Verner's waste of skin son, you'll be fine."
       "Even Verner doesn't seem to be the biggest fan of Trevor":
@@ -1143,6 +1153,8 @@ label startDayFour:
       morgan "Good morning, [povname]. I expect you are well."
       morgan "Here are your tasks for the day..."
       morgan "It looks like Verner Matthias needs an extra hand. Go by his office today and see what he needs."
+      if askedAboutPetrone == True or blairScore > 5:
+         morgan "Blair Bailey would also like to speak with you."
       morgan "Good luck."
       hide morgan default
       jump dayFourToggle
@@ -1150,14 +1162,41 @@ label startDayFour:
 label dayFourToggle:
    menu:
       me "Ok, where should I go next?" 
-      "Help Verner" if visitedVerner == False:
+      "Help Verner." if visitedVerner == False:
          jump vernerDayFour
+      "See what Blair wants." if visitedBlair == False and (askedAboutPetrone == True or blairScore > 5):
+         jump blairDayFour
       "Call it a day.":
          if trumanNote == False:
             jump playingHooky
          if trumanNote == True:
             jump freda4_gift
 
+#BLAIR DAY 4
+label blairDayFour:
+   scene bg blairoffice with fade
+   show blair smile
+   blair "Hello, [povname]."
+   blair "I need your help on something I've cooked up. Are you scheduled to be here tomorrow?"
+   menu:
+      "As I always am.":
+         $ blairScore += 2
+         blair "Good. Come to me bright and early tomorrow. It's important."
+         me "What are we doing?"
+         show blair smirk
+         blair "You'll see."
+      "Unfortunately.":
+         $ blairScore -= 1
+         blair "Don't be so morose."
+         blair "Come to me bright and early tomorrow. It's important."
+         me "What are we doing?"
+         show blair smirk
+         blair "You'll see."
+   $ visitedBlair = True
+   hide blair smirk
+   jump dayFourToggle
+
+#FREDA DAY 4
 label freda4_gift:
    scene bg erstwhilefoyer with fade
    show freda frown
@@ -1315,7 +1354,7 @@ label verner4_trevor_ask:
       "What if I helped you talk to your dad?":
          $ trevorScore += 1
          trev "No, no... I couldn't ask you to do that. It's fine."
-         show trevor pleasant
+         show trevor default
          trev "Hey... thanks for caring. Not many people stop and talk to me. Mostly people just assume I'm an asshole."
          show trevor pleasant
          trev "Which is true."
@@ -1386,17 +1425,23 @@ label startDayFive:
    else:
       morgan "Good morning, [povname]. I expect you are well."
       morgan "Here are your tasks for the day..."
-      morgan "It looks like Verner Matthias needs an extra hand. Go by his office today and see what he needs."
-      morgan "Good luck."
+      morgan "Freda seemed rather distraught this morning. I advise you go check on her."
+      morgan "It also looks like Verner Matthias needs an extra hand. Go by his office today and see what he needs."
+      morgan "Lastly, Blair has requested to see you."
+      morgan "It looks like you have a busy day. Good luck."
       hide morgan default
       jump dayFiveToggle
 
 label dayFiveToggle:
    menu:
       me "Ok, where should I go next?" 
-      "Help Verner" if visitedVerner == False:
+      "Help Verner." if visitedVerner == False:
          jump vernerDayFive
-      "Call it a day":
+      "Help Freda." if visitedFreda == False:
+         jump fredaDayFive
+      "Help Blair." if visitedBlair == False:
+         jump blairDayFive
+      "Call it a day.":
          jump playingHooky
 
 define trevorTalk = False
@@ -1441,7 +1486,7 @@ label verner5_trev:
 
 label verner5_pos:
    verner "piss poop"
-   jump endDay
+   jump dayFiveToggle
 
 #TREVOR DAY 5
 label trevorDayFive:
@@ -1454,8 +1499,6 @@ label trevorDayFive:
          jump trevor5_yes
       "Not right now, I'm busy.":
          jump trevor5_no
-
-
 
 label trevor5_yes:
    show trevor default
@@ -1488,6 +1531,359 @@ label trevor5_no:
    $ trevorWantsToTalkToDad = False
    jump vernerDayFive
 
+# FREDA DAY 5
+label fredaDayFive:
+   scene bg fredaoffice with fade
+   show freda default
+   freda "Ah! There you are, [povname]. Listen… I have a special task for you today."
+   freda "I received some...flowers, of course..it has a T on the letter that came with them."
+   freda "Do you know who that might be?"
+   menu:
+      freda "Do you know who that might be?"
+      "Tacos?":
+         jump freda5_tacos
+      "Truman?":
+         $ fredaScore += 1
+         jump freda5_truman
+
+label freda5_truman:
+   freda "That’s right! It has to be Truman."
+   freda "Truman, oh Truman…"
+   freda "Can you go give him this note please? It’d be much appreciated."
+   freda "And come back here and tell me what he says."
+   $ visitedFreda = True
+   jump trumanDayFive
+
+label freda5_tacos:
+   freda "Not... quite." 
+   freda "It's a person."
+   menu:
+      freda "It's a person."
+      "Oh, right. Truman?":
+         $ fredaScore += 1
+         jump freda5_truman
+      "Trevor?":
+         show freda frown
+         freda "Trevor...he’s a grouch, why would he ever send me flowers? Who else is here that has a name that starts with T…"
+         show freda default
+         jump freda5_silly
+
+label freda5_silly:
+   menu:
+      freda "Trevor...he’s a grouch, why would he ever send me flowers? Who else is here that has a name that starts with T…"
+      "Truman?":
+         jump freda5_truman
+      "I give up":
+         jump freda5_exasperated
+
+label freda5_exasperated:
+   show freda frown
+   freda "It's Truman! It's got to be!"
+   show freda happy
+   freda "Truman, oh Truman…"
+   freda "Can you go give him this note please? It’d be much appreciated."
+   freda "And come back here and tell me what he says."
+   $ visitedFreda = True
+   jump trumanDayFive
+
+#TRUMAN DAY 5
+label trumanDayFive:
+   scene bg trumanoffice with fade
+   show truman default
+   truman "Hello! Did...did Freda get my flowers?"
+   menu:
+      truman "Hello! Did...did Freda get my flowers?"
+      "Yep!":
+         $ trumanScore += 1
+         jump truman5_yes
+      "She loved them.": 
+         $ trumanScore += 5
+         jump truman5_yes
+
+label truman5_yes:
+   show truman smile
+   truman "Oh good! I’m so happy… "
+   show truman default
+   truman "You know we both lost our spouses, we are both so lonely these days."
+   truman "It’d be great if I had somebody to walk this life again with."
+   menu:
+      truman "It’d be great if I had somebody to walk this life again with."
+      "Why don’t you go talk to her yourself?":
+         $ trumanScore += 1
+         jump truman5_yesPos
+      "I guess I do":
+         jump truman5_yesNeu
+      "Seems a little dramatic":
+         $ trumanScore -= 1
+         jump truman5_yesNeg
+
+label truman5_yesNeg:
+   truman "Oh you kids don’t understand love these days.."
+   truman "One day you’ll get it."
+   truman "Maybe today is the day..."
+   truman "Yes, that is right, I think I’ll tell her my true feelings."
+   menu: 
+      truman "Yes, that is right, I think I’ll tell her my true feelings."
+      "Tell her what now?":
+         jump truman5_tellHerWhat
+      "Oh?":
+         jump truman5_oh
+
+label truman5_oh:
+   show truman smile
+   truman "I really like being with her, you know. Maybe I should tell her that."
+   truman "Yeah, I think I will."
+   truman "Could you do one last favor for me, [povname]?"
+   truman "Can you go tell her I want to see her real quick?"
+   menu:
+      truman "Can you go tell her I want to see her real quick?"
+      "She actually asked me to give you this note...":
+         jump truman5_giveNote
+
+label truman5_tellHerWhat:
+   truman "How much I love her of course!"
+   jump truman5_oh
+
+label truman5_yesNeu:
+   truman "Love is the most wonderful thing in life...You know what, I should tell her how I feel."
+   truman "Yeah, I think I will."
+   truman "Could you do one last favor for me, [povname]?"
+   truman "Can you go tell her I want to see her real quick?"
+   menu:
+      truman "Can you go tell her I want to see her real quick?"
+      "She actually asked me to give you this note...":
+         jump truman5_giveNote
+
+label truman5_yesPos:
+   truman "What! I don’t know if she would like that…"
+   menu:
+      truman "What! I don’t know if she would like that…"
+      "You both talk about each other all the time!":
+         truman "She talks about me???"
+         truman "Maybe you’re right...I will talk to her."
+         jump truman5_decision
+
+      "Everyone knows you and Freda are into each other":
+         truman "Really?? Is it that obvious? Well I guess there is no denying it."
+         truman "Maybe I should tell her how I feel finally in person."
+         jump truman5_decision
+
+label truman5_decision:
+   truman "Can you go tell her I want to see her real quick?"
+   menu:
+      truman "Can you go tell her I want to see her real quick?"
+      "She actually asked me to give you this note...":
+         jump truman5_giveNote
+
+label truman5_giveNote:
+   truman "What? She did now?"
+   truman "Let me see that."
+   truman "..."
+   truman "......"
+   truman "Oh... I had no idea she felt this same way."
+   truman "You know what? I'm done hiding behind others to share my emotions. I'm going to tell her myself."
+   truman "Please excuse me, [povname]."
+   jump truman5_romanceFinal
+ 
+label truman5_romanceFinal:
+   scene bg fredaoffice
+   show freda default
+   show truman default
+   truman "Oh! Freda...Freda, I have something to tell you."
+   freda "Yes, Truman?"
+   truman "Something I’ve been waiting to tell you for a long time now..."
+   freda "I have something I’ve wanted to tell you for a long time now too.."
+   truman "Well...Freda..."
+   freda "Yes, Truman?"
+   show truman smile
+   truman "I’m in love with you Freda, I’ve been in love with you since the moment I saw you."
+   show freda happy
+   freda "Oh Truman! I’ve been in love with you too...for so long."
+   truman "This might be crazy... but we're getting older and I won’t take any more chances..."
+   truman "Will you… will you marry me Freda?"
+   freda "Oh Truman! Yes, yes. I’d love to be your wife for my remaining days.."
+   truman "Oh I’m so happy! I’m so glad."
+   truman "This all couldn’t have been possible without you, [povname]."
+   truman "Say... What do you think about working here full time?" 
+   truman "We are retiring here soon, anyways and could use more young people that truly care about the wellbeing of others."
+   menu:
+      truman "Even if we are just lovestruck old birds."
+      "I'd be honored!":
+         $fredaScore += 1
+         $trumanScore += 1
+         truman "Oh good!! Happy days. Let’s get out of here, Freda."
+         freda "Right behind you."
+         jump romanceEnding
+      "I'd love to stay!":
+         $fredaScore += 1
+         $trumanScore += 1
+         truman "Oh good!! Happy days. Let’s get out of here, Freda."
+         freda "Right behind you." 
+         jump romanceEnding    
+      "Nah, that’s ok. I think I'm done with politics.":
+         show truman default
+         truman "Oh...Ok well, thank you again for your help."
+         truman "This all wouldn’t have been possible without you."
+         truman "Me and Freda are off! Goodbye!"
+         jump neutralEnding
+
+# BLAIR DAY 5
+label blairDayFive:
+   scene bg blairoffice
+   show blair default
+   blair "Oh, you’re here, [povname]. Listen, I know we’ve been “talking” lately, and I have a little assignment for you..."
+   show blair smirk
+   blair "Spying that is, are you in?"
+   menu:
+      blair "Spying that is, are you in?"
+      "Hell yeah! Who are we spying on?":
+         $blairScore += 5
+         jump blair5_yes
+      "What? No, I would never do that.":
+         $ blairScore -= 5
+         jump blair5_no
+
+label blair5_yes:
+   blair "Prime Minister Petrone of course, we must keep an eye on them and wait for the perfect opportunity to strike."
+   menu:
+      "Strike?":
+         $blairScore -= 1
+         jump blair5_strike
+      "What are we waiting for?":
+         $blairScore += 1
+         jump blair5_whatWaitingFor
+      "Let's get on with it then!":
+         jump blair5_letsGetOn
+
+label blair5_strike:
+   blair "Yes. Petrone's grip on this country is loosening, and it's time a real leader stepped up to get something done."
+   menu:
+      blair "Yes. Petrone's grip on this country is loosening, and it's time a real leader stepped up to get something done."
+      "Right...":
+         blair "I hope you're not getting cold feet on me."
+         blair "Well, get going, go get me something juicy."
+         jump blair5_goSpy
+      "Oh, right!":
+         blair "I knew you’d remember, now go get me some good gossip."
+         jump blair5_goSpy
+
+label blair5_whatWaitingFor:
+   blair "Exactly! Now make sure you bring me something good back."
+   blair "We are trying to get rid of her after all."
+   jump blair5_goSpy
+
+label blair5_letsGetOn:
+   show blair smile
+   blair "Perfect, I knew you were the one for this job."
+   jump blair5_goSpy
+
+label blair5_no:
+   blair "No? Funny, you seemed pretty interested a few days ago."
+   blair "You’re seriously going to go back on me like that?"
+   show blair smirk
+   blair "... Fine. But you'll pay for what you've done."
+   menu:
+      blair "... Fine. But you'll pay for what you've done."
+      "What I’ve done?":
+         jump blair5_whatIveDone
+      "Not if I throw you in jail first!":
+         $ blairScore -= 5
+         jump blair5_notIfIDoItFirst
+      "Try me.":
+         $ blairScore -= 1
+         jump blair5_tryMe
+
+label blair5_whatIveDone:
+   blair "Why, yes! Trying to overthrow the Prime minister that is, you bastard. I’m calling security."
+   menu: 
+      "Wait no! Ok ok... I’ll spy on the prime minister":
+         $ blairScore += 1
+         jump blair5_letsGetOn
+      "You're a monster.":
+         blair "Security! Security! This intern was trying to assassinate Prime Minister Petrone themself! I have all the evidence to prove it!"
+         blair "{i}Good luck trying to worm you way out of this one, kid.{/i}"
+         jump arrestedEnding
+
+label blair5_notIfIDoItFirst:
+   show blair smirk
+   blair "As if!"
+   menu:
+      blair "As if!"
+      "Security! Security! This woman was trying to frame me AND assasinate Prime Minister Petrone!":
+         $ blairScore -= 5
+         show blair default
+         blair "Fuck you."
+         jump arrestBlairEnding   
+      "Don’t try and play games with me. Let’s just call it even.":
+         $ blairScore += 1
+         blair "Too little, too late. I’m calling security. Sucker."
+         jump arrestedEnding
+
+label blair5_tryMe:
+   show blair smirk
+   blair "Help! Security! [povname] is trying to attack the prime minister!"
+   jump arrestedEnding
+
+label blair5_goSpy:
+   scene bg room with fade
+   me "It's so quiet... it doesn't look like Prime Minister Petrone is in here..."
+   "{i}click... click... click{/i}"
+   show petrone silo
+   unknown "What's that I smell? A human?"
+   unknown "Who goes there?"
+   me "Aw, shit..."
+   show petrone default
+   petrone "You there? Who are you? What are you doing in my office?"
+   me "{i}A pigeon????{/i}"
+   me "{i}Prime Minister Petrone is???? A pigeon????{/i}"
+   me "Uh.... trying to find a bathroom?"
+   petrone "Unlikely."
+   petrone "You're in {i}*coo coo*{/i} biiiiiig trouble, kid."
+   blair "Not so fast!"
+   show blair default
+   blair "Your bird reign of terror is over, Petrone! Hand it over or we will take it by force!"
+   petrone "Over {i}*coo coo*{/i} my dead body."
+   blair "Get them, [povname]!"
+   menu: 
+      blair "Get them, [povname]!"
+      "(Attack Petrone)":
+         jump blair5_attackPetrone
+      "(Kill Petrone)":
+         jump blair5_killPetrone
+      "(Frame Petrone)":
+         jump blair5_framePetrone
+
+label blair5_attackPetrone:
+   hide blair default
+   "{i}SMASH! CRACK! SQUAK!{/i}"
+   petrone "You bastard! I’ll end you!"
+   menu:
+      "Now, Blair!":
+         jump blair5_getPetrone
+      "Don’t you dare.":
+         jump blair5_dontYouDare
+
+label blair5_getPetrone:
+   petrone "NOOO!"
+   jump usurpPetroneEnding
+
+label blair5_dontYouDare:
+   petrone "Help! Help me! I’m being attacked!"
+   unknown "Hey, what's going on in here?"
+   me "Uh oh...."
+   jump usurpPetroneUnsuccessfulEnding
+
+label blair5_killPetrone:
+   "CRACK!!!"
+   petrone "AHHHH! I’ll remember this in the next life..."
+   jump killedPetroneEnding
+
+label blair5_framePetrone:
+   blair "Security! Help! The Prime Minister is attacking an intern!!"
+   petrone "I’ll have your head for this!"
+   jump usurpPetroneEnding
+
+
 label endDay:
    scene black
    with fade
@@ -1509,7 +1905,7 @@ label endDay:
       call resetFlags from _call_resetFlags_1
       jump startDayFour
    if day == 5:
-      if visitedVerner == False:
+      if visitedVerner == False or visitedBlair == False:
          $ morganScore -= 10
       call resetFlags from _call_resetFlags_2
       jump startDayFive
@@ -1534,6 +1930,78 @@ label badEnding:
    "Unfortunately, you were not successful in your internship."
    "Morgan Odell reported back to your university of your failure to complete your duties. The dean of your school is not happy."
    "You decide not to pursue a career in politics anymore."
+   "GAME OVER"
+   jump end
+
+# You got arrested
+label arrestedEnding:
+   scene bg erstwhileoutside
+   with fade
+   "Unfortunately, the judge did not believe your side of the story in court."
+   "Of course, Blair Bailey was eager to frame you."
+   "Your sentence is 25 years. Ouch."
+   "You get fired from your internship."
+   "Better luck next time."
+   "GAME OVER"
+   jump end
+
+# You have full time job
+label romanceEnding:
+   scene bg erstwhileoutside with fade
+   "The two lovebirds soon retire after their elopement. Based on their glowing reviews of you, Morgan Odell assigns you to take over both of their positions can be filled."
+   "You do such a good job of it, you become the new Secretary of Treasury, officially taking over Freda Robert's role."
+   "You end up having a very fruitful career in the Erstwhile House."
+   "CONGRATULATIONS"
+   jump end
+
+# You finish job
+label neutralEnding:
+   scene bg erstwhileoutside with fade
+   "You finish out your days at your internship with not much fuss."
+   "No one appears to overly enjoy your presence, or hate it."
+   "You get a positive feedback review from Morgan Odell, and return to your university."
+   "Congratulations on a successful summer."
+   jump end
+
+# arrest blair
+label arrestBlairEnding:
+   scene bg erstwhileoutside with fade
+   "After a thorough search of her office, Blair Bailey's treason has become apparent to the Erstwhile House government."
+   "She is arrested, and sentenced to 25 years. You are showered in praise by the rest of the Erstwhile House staff for your bravery."
+   "You get a positive feedback review from Morgan Odell, and return to your university, with a new perspective on the political climate in your country."
+   "Congratulations on a successful summer."
+   jump end
+
+# kill petrone
+label killedPetroneEnding:
+   scene bg erstwhileoutside with fade
+   "You murdered Prime Minister Petrone."
+   "Thankfully, Blair Bailey was able to help convince security that the Prime Minister had gotten a case of fatal bird brain, and gone beserk on you, poor intern."
+   "The Erstwhile House thanks you for your bravery."
+   "Blair Bailey is eventually named as the new Prime Minister shortly after."
+   "She offers you a position as her Chief of Staff."
+   "Congratulations on a successful summer."
+   jump end
+
+# usurp petrone
+label usurpPetroneEnding:
+   scene bg erstwhileoutside with fade
+   "You successfully usurped the reign of Prime Minister Petrone."
+   "Thankfully, Blair Bailey was able to help convince security that the Prime Minister had gotten a case of fatal bird brain, and gone beserk on you, poor intern."
+   "The Erstwhile House thanks you for your bravery."
+   "Blair Bailey is eventually named as the new Prime Minister shortly after."
+   "She offers you a position as her Chief of Staff."
+   "Congratulations on a successful summer."
+   jump end
+
+# unsucessful government takeover
+label usurpPetroneUnsuccessfulEnding:
+   scene bg erstwhileoutside with fade
+   "You and Blair Bailey's plan to overthrow Petrone's leadership was unsuccessful."
+   "Of course, Blair Bailey was eager to frame you, and throw most of the blame on you."
+   "Your sentence is 50 years. Ouch."
+   "You get fired from your internship."
+   "Better luck next time."
    "GAME OVER"
    jump end
 

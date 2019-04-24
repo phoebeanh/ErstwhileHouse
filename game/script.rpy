@@ -522,11 +522,15 @@ label freda2_silly:
 
 label freda2_reject:
    freda "Oh...Uhm. I guess I’ll try looking for them myself."
-   freda "Go on then. Blair Bailey was looking for you by the way..."
+   freda "Go on then."
    $ rejectedFreda = True
    $ visitedFreda = True
-   hide freda noglasses
-   jump day2Toggle
+   if visitedBlair == False:
+      freda "Blair Bailey was looking for an assistant by the way..."
+      jump blairDayTwo
+   if visitedBlair == True:
+      hide freda noglasses
+      jump day2Toggle
 
 label freda2_1Pos:
    freda "Oh well, let me think." 
@@ -682,8 +686,13 @@ label truman2_freda:
          jump truman2_freda1
 
 label truman2_np:
-   truman "When you finish, don’t forget to stop by Blair’s office, thanks again!"
-   jump trumanToBlair
+   truman "I appreciate your enthusiasm, [povname]."
+   if visitedBlair == False:
+      truman "When you finish, don’t forget to stop by Blair’s office, thanks again!"
+      jump trumanToBlair
+   if visitedBlair == True:
+      jump truman2_afterStack
+      
 
 label truman2_freda1:
    truman "Oh yes..Freda..."
@@ -713,7 +722,7 @@ label truman2_acceptFredaQuest:
 label trumanToBlair:
    scene black
    with fade
-   me "I finish up helping Blair with his organization, then head to Blair Bailey's office."
+   me "Well, that was long. Time to head to Blair Bailey's office."
    $ visitedTruman = True
    jump blairDayTwo
 
@@ -727,16 +736,22 @@ label truman2_negTask:
          jump truman2_recovery
 
 label truman2_rejectTask:
-   truman "How dare you! I don’t need you anymore. Go to Blair’s office right this minute."
+   truman "How dare you!"
+   truman "I don’t need you anymore. Get out of here."
    truman "I’ll remember this." 
    $ visitedTruman = True
    $ rejectedTruman = True
-   jump blairDayTwo
+   if visitedBlair == False:
+      jump blairDayTwo
+   jump day2Toggle
 
 label truman2_recovery:
    truman "That's what I thought. Now go finish organizing those files, {i}please.{/i}"
-   truman "Once you’re done with that, go see Blair."
-   jump trumanToBlair
+   if visitedBlair == False:
+      truman "Once you’re done with that, go see Blair."
+      jump trumanToBlair
+   if visitedBlair == True:
+      jump truman2_afterStack
 
 label truman2_neg:
    truman "Ah... they always seem to find the cheeky ones."

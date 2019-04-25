@@ -557,7 +557,7 @@ screen about():
                 text "[gui.about!t]\n"
 
             text _("Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]")
-            text _("\n\"Blues Style Piano Loop\" provided by {a=https://www.facebook.com/AlexanderBluMusic/}Alexander Blu{/a}. \nThis loop is permitted for commercial use under license Creative Commons Attribution 4.0 International License")
+            text _("\n\"Lovers of the rain\" provided by {a=http://amachamusic.chagasi.com}Ama's Music Studio{/a}. \nThis music is permitted for commercial use under Ama's Music Studio's Terms of Service.")
 
 
 ## This is redefined in options.rpy to add text to the about screen.

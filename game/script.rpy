@@ -919,7 +919,7 @@ label blair2_coffee:
          jump blair2_end
       "Black coffee":
          $ coffeeOrder = "black"
-         $ blairScore += 1
+         $ blairScore += 3
          me "I make the drink and head back to Blair Bailey's office."
          jump blair2_end
 label blair2_end:
@@ -1040,6 +1040,7 @@ label blairDayThree:
          blair "Well don’t get too comfortable. All that means is I’m expecting you to complete the same tasks and not complain about it."
          jump blair3_task
       "Even Verner doesn't seem to be the biggest fan of Trevor...":
+         $ blairScore += 1
          blair "Well I can’t be sure you’re any better until you prove yourself to me."
          jump blair3_task
 
@@ -1370,7 +1371,7 @@ label verner4_trevor_ask:
          $ trevorScore += 2
          jump verner4_trevor_fashion
       "Things will work out.": 
-         trev "...I guess"
+         trev "...I guess."
          jump verner4_trevor_end
       "What if I helped you talk to your dad?":
          $ trevorScore += 1
@@ -1415,7 +1416,7 @@ label verner4_trevor_spoken:
          verner "I see… Again, I apologize for getting personal matters involved. I suppose I shouldn’t reprimand Freda and Truman for doing the same... Well, you are dismissed for the day."
          verner "And [povname]... Thank you."
          jump endDay
-      "Unfortunately":
+      "Unfortunately...":
          $ vernerScore -= 2
          verner "Ah... I guess it didn't go well."
          verner "My apologies for getting personal matters involved. You are dismissed."
@@ -1446,9 +1447,12 @@ label startDayFive:
    else:
       morgan "Good morning, [povname]. I expect you are well."
       morgan "Here are your tasks for the day..."
-      morgan "Freda seemed rather distraught this morning. I advise you go check on her."
-      morgan "It also looks like Verner Matthias needs an extra hand. Go by his office today and see what he needs."
-      morgan "Lastly, Blair has requested to see you."
+      if fredaScore >= 7:
+         morgan "Freda seemed rather distraught this morning. I advise you go check on her."
+      if vernerScore >= 7:
+         morgan "It also looks like Verner Matthias needs an extra hand. Go by his office today and see what he needs."
+      if blairScore >= 5:
+         morgan "Lastly, Blair has requested to see you."
       morgan "It looks like you have a busy day. Good luck."
       hide morgan default
       jump dayFiveToggle
@@ -1456,11 +1460,11 @@ label startDayFive:
 label dayFiveToggle:
    menu:
       me "Ok, where should I go next?" 
-      "Help Verner." if visitedVerner == False:
+      "Help Verner." if vernerScore >= 10:
          jump vernerDayFive
-      "Help Freda." if visitedFreda == False:
+      "Help Freda." if fredaScore >= 10:
          jump fredaDayFive
-      "Help Blair." if visitedBlair == False:
+      "Help Blair." if blairScore >= 5:
          jump blairDayFive
 
 define trevorTalk = False
@@ -1495,8 +1499,10 @@ label verner5_trev:
          verner "Thank you, [povname]."
          jump verner5_pos
       "He’s worried you won’t be okay with what he wants his career to be.":
+         show verner somber
          verner "Really? I guess I’ve been pretty hard on him since his mother died. I've noticed he hasn't really been as open with me ever since."
          verner "But, I’m sure whatever it is, he can tell me. He might be a better man if he had a little support behind him."
+         show verner default
          verner "Thanks for letting me know, [povname]."
          jump verner5_pos
       "It’s nothing. Nevermind.":
@@ -1504,8 +1510,30 @@ label verner5_trev:
          jump verner5_pos
 
 label verner5_pos:
-   verner "piss poop"
-   jump dayFiveToggle
+   verner "Now, on the business..."
+   verner "Well, I was going to save this offer for later, but now seems as good a time as any."
+   verner "From what I've experienced, and from what I've heard from other Erstwhile House staff, you have been doing an outstanding job. You've made yourself an asset to the House."
+   verner "How would you like to work here, as an actual staff member?"
+   menu:
+      verner "I mean, you know the ropes and seem to get your work done."
+      "I was planning to, if you all would accept me.":
+         show verner somber
+         verner "Splendid, I’m happy to hear that! I’ll let Morgan know and see her later about it."
+         if trevorTalk == True:
+            jump trevorRomanceEnding
+         else: 
+            jump acceptJobEnding
+      "I'm not sure, there is a lot of drama here":
+         verner "I understand. But just in case you do consider it, I’ll let Morgan know."
+         if trevorTalk == True:
+            jump trevorRomanceEnding
+         else: 
+            jump neutralEnding
+      "No, I think I've learned politics is not for me":
+         show verner somber
+         verner "That’s too bad. I hope you'll reconsider someday, [povname]."
+         verner "Good luck."
+         jump neutralEnding
 
 #TREVOR DAY 5
 label trevorDayFive:
@@ -1721,12 +1749,12 @@ label truman5_romanceFinal:
    show freda happy
    freda "Oh Truman! I’ve been in love with you too...for so long."
    truman "This might be crazy... but we're getting older and I won’t take any more chances..."
-   truman "Will you… will you marry me Freda?"
-   freda "Oh Truman! Yes, yes. I’d love to be your wife for my remaining days.."
+   truman "Will you-- will you marry me Freda?"
+   freda "Oh Truman! Yes, {i}yes{/i}. I’d love to be your wife for my remaining days..."
    truman "Oh I’m so happy! I’m so glad."
    truman "This all couldn’t have been possible without you, [povname]."
    truman "Say... What do you think about working here full time?" 
-   truman "We are retiring here soon, anyways and could use more young people that truly care about the wellbeing of others."
+   truman "We are retiring here soon and could use more young people that truly care about the wellbeing of others."
    menu:
       truman "Even if we are just lovestruck old birds."
       "I'd be honored!":
@@ -1734,13 +1762,7 @@ label truman5_romanceFinal:
          $trumanScore += 1
          truman "Oh good!! Happy days. Let’s get out of here, Freda."
          freda "Right behind you."
-         jump romanceEnding
-      "I'd love to stay!":
-         $fredaScore += 1
-         $trumanScore += 1
-         truman "Oh good!! Happy days. Let’s get out of here, Freda."
-         freda "Right behind you." 
-         jump romanceEnding    
+         jump romanceEnding  
       "Nah, that’s ok. I think I'm done with politics.":
          show truman default
          truman "Oh...Ok well, thank you again for your help."
@@ -1923,6 +1945,8 @@ label endDay:
    if day == 4:
       if visitedVerner == False:
          $ morganScore -= 10
+      if askedAboutPetrone == True and visitedBlair == False:
+         $ morganScore -= 10
       call resetFlags from _call_resetFlags_1
       jump startDayFour
    if day == 5:
@@ -1972,7 +1996,7 @@ label romanceEnding:
    "The two lovebirds soon retire after their elopement. Based on their glowing reviews of you, Morgan Odell assigns you to take over both of their positions can be filled."
    "You do such a good job of it, you become the new Secretary of Treasury, officially taking over Freda Robert's role."
    "You end up having a very fruitful career in the Erstwhile House."
-   "Sometimes, you get a few flowers on your desk, labeled F & T."
+   "Sometimes, you get a few flowers on your desk, labeled F & T. The card always reads, {i}Thank you.{/i}"
    "You smile to yourself whenever you see them."
    "The end."
    jump end
@@ -1981,7 +2005,7 @@ label romanceEnding:
 label neutralEnding:
    scene bg erstwhileoutside with fade
    "You finish out your days at your internship with not much fuss."
-   "No one appears to overly enjoy your presence, or hate it."
+   "The rest of the summer is unusually quiet... You almost miss the drama."
    "You get a positive feedback review from Morgan Odell, and return to your university."
    "Congratulations on a successful summer."
    jump end
@@ -2028,6 +2052,159 @@ label usurpPetroneUnsuccessfulEnding:
    "GAME OVER"
    jump end
 
+#Accepted job ending
+label acceptJobEnding:
+   scene bg erstwhileoutside with fade
+   "You finish out your days at your internship with not much fuss."
+   "The rest of the summer is unusually quiet... You almost miss the drama."
+   "You get a positive feedback review from Morgan Odell, and after your extent of university, arrive back at the Erstwhile House as a full-time staff member."
+   "Congratulations on your success!"
+   jump end
+
+#Trevor romance ending
+label trevorRomanceEnding:
+   scene black with fade
+   "Some months later..."
+   scene bg morganoffice with fade
+   show morgan default
+   morgan "There you are, [povname]. Trevor asking to see you. Very peculiar of him."
+   menu:
+      morgan "You'd better go see what he wants."
+      "Yes ma'am!":
+         morgan "See me after for your assignment!"
+         jump trevorEnd
+      "Okay.":
+         morgan "See me after for your assignment!"
+         jump trevorEnd
+      "What does he want?":
+         morgan "I’ve no clue, you’ll just have to go find out yourself."
+         me "Fine..."
+         jump trevorEnd
+
+label trevorEnd:
+   scene bg erstwhilefoyer with fade
+   show trevor pleasant
+   trev "Ah, [povname]! Just the person I was wanting to see."
+   menu:
+      trev "Ah, [povname]! Just the person I was wanting to see."
+      "Really?":
+         jump trev_really
+      "What do you need help with?":
+         jump trev_help
+      "Why?":
+         jump trev_why
+
+label trev_why:
+   show trevor flustered
+   trev "Because.... I like spending time with you of course. Also, will you help me with this task?"
+   show trevor default
+   menu:
+      trev "It's very important..."
+      "Okay.":
+         jump trev_readLetter
+      "Sure...?":
+         jump trev_readLetter
+
+label trev_readLetter:
+   trev "Here, read this letter for me."
+   "You get a slightly crinkled letter shoved into your hands. It's a little damp."
+   "Is it... palm sweat?"
+   "{i}[povname],{/i}"
+   "{i}Since I met you, you’ve always been kind to me. I know it can be hard to get over my general assholery, but you’ve seen that I’m someone more behind that mask I carry."
+   "{i}I really enjoy my time with you. You make me feel happy. What do you say about going on a date with me?{/i}"
+   show trevor flustered
+   menu:
+      trev "So.. date?"
+      "You want to go on a date with me?":
+         jump trev_wantDate
+      "Why Trevor... I didn't know you felt this way about me...":
+         jump trev_coy
+
+label trev_wantDate:
+   show trevor pleasant
+   trev "Well of course, [povname] you’re amazing."
+   menu:
+      trev "What do you say?"
+      "Okay, yeah! Why not?":
+         jump trev_acceptDate
+      "I'd love to!":
+         jump trev_acceptDate
+      "I'm not sure...":
+         jump trev_unsure
+
+label trev_unsure:
+   show trevor annoyed
+   trev "Really? Why are you unsure?"
+   menu:
+      trev "Really? Why are you unsure?"
+      "This is so sudden...":
+         jump trev_sudden
+      "I don't even know if I like you!":
+         jump trev_sudden
+
+label trev_sudden:
+   show trevor default
+   trev "Well, why don’t you just give me a chance? One date, If it doesn’t work. No harm done."
+   menu:
+      trev "Well, why don’t you just give me a chance? One date, If it doesn’t work. No harm done."
+      "Okay, fine.":
+         jump trev_acceptDate
+      "Alright, I guess":
+         jump trev_acceptDate
+      "I don't think I'm interested.":
+         jump trev_rejectDate
+
+label trev_coy:
+   trev "I know it's a bit... unexpected. But these are my true feelings!"
+   menu:
+      trev "So uh... what do you say?"
+      "I'd be happy to!":
+         jump trev_acceptDate
+      "Sorry, I'm not interested":
+         jump trev_rejectDate
+
+label trev_acceptDate:
+   show trevor pleasant
+   trev "Really?? That’s great! Oh I’m so happy..."
+   show trevor flustered
+   trev "After I spilled out to you about myself, I thought maybe for sure I scared you away. This is great news."
+   show trevor pleasant
+   trev "You've made me the happiest guy on the planet."
+   trev "I'll pick you up next Saturday?"
+   me "Sounds like a deal."
+   trev "Okay, great!"
+   trev "Hey [povname]... thanks for giving me a chance."
+   jump end
+
+label trev_rejectDate:
+   show trevor default
+   trev "Oh... really?"
+   trev "umm... *cough* ... well this is awkward."
+   show trevor flustered
+   trev "Forget I said anything."
+   trev "I'll... see you around, maybe."
+   scene bg erstwhileoutside with fade
+   "You did not see him around."
+   "Soon after you let him down easy, Trevor stopped showing up to the Erstwhile House."
+   "His father, needless to say, was not pleased."
+   "He may or may not have blamed you for his son's sudden bout of truancy, and it didn't make your life any easier."
+   "Despite that, uou finish out your days at your internship with not much fuss."
+   "The rest of the summer is unusually quiet... You almost miss the drama."
+   "You get a positive feedback review from Morgan Odell, and you return back to your university."
+   "Congratulations on your success!"
+   jump end
+
+
+label trev_really:
+   trev "Yes of course. You know I’ve been talking to you a lot lately... I want to show you something."
+   jump trev_readLetter
+
+label trev_help:
+   trev "With this letter..."
+   jump trev_readLetter
+
 # This ends the game.
 label end:
+   scene black with fade
+   "Thanks for playing!"
    return
